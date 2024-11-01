@@ -1,0 +1,31 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "host": "websocket server hostname",
+                    "port": "websocket server port",
+                    "pin_required": "Require pin to arm/disarm"
+
+                },
+                "title": "Visonic Powerlink Setup"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "websocket server hostname",
+                    "port": "websocket server port",
+                    "pin_required": "Require pin to arm/disarm"
+
+                },
+                "title": "Visonic Powerlink Setup"
+            }
+        },
+        "error": {
+            "cannot_connect": "Can't connect",
+            "unknown": "Unknown error, see log for details"
+        },
+        "abort": {
+            "already_configured": "Only single instance configuration possible"
+        }
+    }
+}
