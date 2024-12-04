@@ -6,17 +6,10 @@ from typing import Any
 from homeassistant.components.alarm_control_panel import (
     AlarmControlPanelEntity,
     AlarmControlPanelEntityFeature,
+    AlarmControlPanelState,
     CodeFormat,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    STATE_ALARM_ARMED_AWAY,
-    STATE_ALARM_ARMED_CUSTOM_BYPASS,
-    STATE_ALARM_ARMED_HOME,
-    STATE_ALARM_ARMED_NIGHT,
-    STATE_ALARM_ARMED_VACATION,
-    STATE_ALARM_DISARMED,
-)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
@@ -107,16 +100,16 @@ class AlarmControlPanel(BaseEntity, AlarmControlPanelEntity):
             )
 
         # Set arming and disarming
-        if status == STATE_ALARM_DISARMED:
+        if status == AlarmControlPanelState.DISARMED:
             self._disarm_in_progress = False
             self._arm_in_progress = False
 
         if status in [
-            STATE_ALARM_ARMED_HOME,
-            STATE_ALARM_ARMED_AWAY,
-            STATE_ALARM_ARMED_NIGHT,
-            STATE_ALARM_ARMED_VACATION,
-            STATE_ALARM_ARMED_CUSTOM_BYPASS,
+            AlarmControlPanelState.ARMED_HOME,
+            AlarmControlPanelState.ARMED_AWAY,
+            AlarmControlPanelState.ARMED_NIGHT,
+            AlarmControlPanelState.ARMED_VACATION,
+            AlarmControlPanelState.ARMED_CUSTOM_BYPASS,
         ]:
             self._arm_in_progress = False
         return status
@@ -136,7 +129,7 @@ class AlarmControlPanel(BaseEntity, AlarmControlPanelEntity):
         )
 
     @property
-    def state(self):
+    def alarm_state(self):
         """Return the state of the device."""
         return self.get_partition_state(self._value)
 
@@ -170,12 +163,14 @@ class AlarmControlPanel(BaseEntity, AlarmControlPanelEntity):
         if self._config.extra_data:
             if (
                 action == "disarm"
-                and self.get_partition_state(self._value) != STATE_ALARM_DISARMED
+                and self.get_partition_state(self._value)
+                != AlarmControlPanelState.DISARMED
             ):
                 self._disarm_in_progress = True
             elif (
                 action != "disarm"
-                and self.get_partition_state(self._value) == STATE_ALARM_DISARMED
+                and self.get_partition_state(self._value)
+                == AlarmControlPanelState.DISARMED
             ):
                 self._arm_in_progress = True
             else:
