@@ -1,0 +1,5 @@
+{
+    "name": "Visonic Powerlink Integration for Home Assistant",
+    "homeassistant": "2024.9",
+    "render_readme": true
+}
