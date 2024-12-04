@@ -11,19 +11,9 @@ import socket
 from websockets import ConnectionClosed
 from websockets.asyncio.client import ClientConnection, connect
 
+from homeassistant.components.alarm_control_panel import AlarmControlPanelState
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_PORT,
-    STATE_ALARM_ARMED_AWAY,
-    STATE_ALARM_ARMED_HOME,
-    STATE_ALARM_ARMING,
-    STATE_ALARM_DISARMED,
-    STATE_ALARM_DISARMING,
-    STATE_ALARM_PENDING,
-    STATE_ALARM_TRIGGERED,
-    Platform,
-)
+from homeassistant.const import CONF_HOST, CONF_PORT, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import json as hajs
 
@@ -184,17 +174,17 @@ class API(BaseAPI):
         disarming = state.get("disarming")
 
         if disarming and status != "Disarmed":
-            return STATE_ALARM_DISARMING
+            return AlarmControlPanelState.DISARMING
         if status in ["ExitDelay_ArmHome", "ExitDelay_ArmAway"]:
-            return STATE_ALARM_ARMING
+            return AlarmControlPanelState.ARMING
         if status == "EntryDelay":
-            return STATE_ALARM_PENDING
+            return AlarmControlPanelState.PENDING
         if status == "Armed Home":
-            return STATE_ALARM_ARMED_HOME
+            return AlarmControlPanelState.ARMED_HOME
         if status == "Armed Away":
-            return STATE_ALARM_ARMED_AWAY
+            return AlarmControlPanelState.ARMED_AWAY
         if status == "Disarmed":
-            return STATE_ALARM_DISARMED
+            return AlarmControlPanelState.DISARMED
         if status == "Triggered":
-            return STATE_ALARM_TRIGGERED
+            return AlarmControlPanelState.TRIGGERED
         return status
